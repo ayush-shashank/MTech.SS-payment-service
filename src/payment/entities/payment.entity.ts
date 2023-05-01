@@ -4,8 +4,10 @@ import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 export class Payment {
   @PrimaryGeneratedColumn()
   id: number;
-  @Column({ nullable: false })
+  @Column()
   userID: number;
-  @Column({ nullable: false })
+  @Column()
   productId: number;
+  @Column()
+  quantity: number;
 }

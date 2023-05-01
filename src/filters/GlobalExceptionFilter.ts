@@ -5,7 +5,7 @@ import {
   HttpStatus,
   Logger,
 } from '@nestjs/common';
-import { RpcException } from '@nestjs/microservices';
+import { RpcException, TcpContext } from '@nestjs/microservices';
 import { throwError } from 'rxjs';
 import { IResponseError } from 'src/interface/response-error.interface';
 import { TypeORMError } from 'typeorm';
@@ -13,10 +13,14 @@ import { TypeORMError } from 'typeorm';
 @Catch()
 export class GlobalExceptionFilter<T> implements ExceptionFilter {
   catch(exception: T, host: ArgumentsHost) {
+    const ctx = host.switchToRpc();
     let message = (exception as any).message;
+    const response = ctx.getContext<TcpContext>();
+    const messagePattern = response.getArgByIndex(1);
     let code = 'RpcException';
 
-    Logger.error(message, (exception as any).stack, 'GlobalExceptionFilter');
+    Logger.debug(ctx.getData(), messagePattern);
+    Logger.error(message, (exception as any).stack, messagePattern);
 
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
 

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -12,12 +12,14 @@ export class PaymentService {
   ) {}
 
   create(createPaymentDto: CreatePaymentDto) {
+    Logger.log(createPaymentDto, 'dto');
     createPaymentDto.productIds.forEach((productId) => {
       const paymentDto = {
         userId: createPaymentDto.userId,
         productId,
         quantity: createPaymentDto.quantity,
       };
+      Logger.log(paymentDto, 'PaymentDto');
       return this.paymentRepository.save(paymentDto);
     });
     // return 'This action adds a new payment';
@@ -34,7 +36,8 @@ export class PaymentService {
   }
 
   update(id: number, updatePaymentDto: UpdatePaymentDto) {
-    return `This action updates a #${id} payment`;
+    return this.paymentRepository.update(id, updatePaymentDto);
+    // return `This action updates a #${id} payment`;
   }
 
   remove(id: number) {
