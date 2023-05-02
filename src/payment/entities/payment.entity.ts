@@ -5,7 +5,7 @@ export class Payment {
   @PrimaryGeneratedColumn()
   id: number;
   @Column()
-  userID: number;
+  userId: number;
   @Column()
   productId: number;
   @Column()
